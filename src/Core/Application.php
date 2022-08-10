@@ -79,13 +79,13 @@ class Application extends App
         protected ?Container $appContainer = null,
         protected array $providerList = [],
         protected array $classAliases = [],
-        ?callable $preInitCallback = null,
+        ?callable $overrideCallback = null,
         array $arguments = [],
     ) {
         $this->frameworkPath = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..']));
 
-        if($preInitCallback) {
-            $preInitCallback($this);
+        if($overrideCallback) {
+            $overrideCallback($this);
         }
 
         $this->appContainer ??= new Container($this->container ?? []);
