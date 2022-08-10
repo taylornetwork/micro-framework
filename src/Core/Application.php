@@ -17,7 +17,7 @@ class Application extends App
      *
      * @var string
      */
-    public static string $namespace = 'Tcco\\HumaTerra\\';
+    public static string $namespace = 'TaylorNetwork\\MicroFramework\\';
 
     /**
      * The application instance.
