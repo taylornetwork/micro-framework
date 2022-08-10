@@ -9,6 +9,8 @@ use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
 use TaylorNetwork\MicroFramework\Contracts\ServiceProvider;
+use Violet\ClassScanner\Scanner;
+use Violet\ClassScanner\TypeDefinition;
 
 class Application extends App
 {
@@ -206,17 +208,20 @@ class Application extends App
      * Discover service providers.
      *
      * @param string $globPath
-     * @param string $globPattern
      * @return void
      */
-    private function discoverProviders(string $globPath, string $globPattern = '*'): void
+    private function discoverProviders(string $globPath): void
     {
-        foreach(glob($this->normalizePath($globPath.'/'.$globPattern)) as $provider) {
-            $class = $this->resolveClassFromPath($provider);
-            if(!in_array($class, $this->providerList)) {
-                $this->providerList[] = $class;
-            }
-        }
+        $scanner = new Scanner();
+        $scanner->scanDirectory($globPath);
+        dump($scanner->getClasses(TypeDefinition::TYPE_CLASS));
+
+//        foreach(glob($this->normalizePath($globPath.'/*')) as $provider) {
+//            $class = $this->resolveClassFromPath($provider);
+//            if(!in_array($class, $this->providerList)) {
+//                $this->providerList[] = $class;
+//            }
+//        }
     }
 
     protected function discoverFrameworkProviders(): void
