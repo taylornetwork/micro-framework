@@ -371,7 +371,7 @@ class Application extends App
         $baseNamespace ??= static::$frameworkNamespace;
         $namespace = ($startingSlash ? '\\' : '').$baseNamespace;
         foreach($segments as $segment) {
-            $namespace .= (Str::endsWith($namespace, '\\') ? '' : '\\').$segment;
+            $namespace .= (str_ends_with($namespace, '\\') ? '' : '\\').$segment;
         }
         return $namespace.($endingSlash ? '\\' : '');
     }
