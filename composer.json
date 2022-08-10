@@ -1,0 +1,23 @@
+{
+    "name": "taylornetwork/micro-framework",
+    "require": {
+        "php": "^8.1",
+        "clue/framework-x": "dev-main",
+        "php-di/php-di": "^6.4",
+        "illuminate/support": "^9.24"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^6.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Taylornetwork\\MicroFramework\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Sam Taylor",
+            "email": "sam@taylornetwork.ca"
+        }
+    ]
+}
