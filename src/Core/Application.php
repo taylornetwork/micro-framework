@@ -17,7 +17,7 @@ class Application extends App
      *
      * @var string
      */
-    public static string $namespace = 'TaylorNetwork\\MicroFramework\\';
+    public static string $frameworkNamespace = 'TaylorNetwork\\MicroFramework\\';
 
     /**
      * The application instance.
@@ -59,7 +59,7 @@ class Application extends App
 
         parent::__construct($this->appContainer, ...$arguments);
 
-        $this->basePath = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..']));
+        $this->basePath = realpath('.');
         $this->appPath = $this->appPath();
 
         $this->discoverProviders();
@@ -208,13 +208,15 @@ class Application extends App
      * Build a namespace given path segments.
      *
      * @param array<string> $segments
+     * @param ?string $baseNamespace
      * @param bool $endingSlash
      * @param bool $startingSlash
      * @return string
      */
-    public function buildNamespaceFromArray(array $segments, bool $endingSlash = true, bool $startingSlash = false): string
+    public function buildNamespaceFromArray(array $segments, string $baseNamespace = null, bool $endingSlash = true, bool $startingSlash = false): string
     {
-        $namespace = ($startingSlash ? '\\' : '').static::$namespace;
+        $baseNamespace ??= static::$frameworkNamespace;
+        $namespace = ($startingSlash ? '\\' : '').$baseNamespace;
         foreach($segments as $segment) {
             $namespace .= (Str::endsWith($namespace, '\\') ? '' : '\\').$segment;
         }
