@@ -221,6 +221,22 @@ class Application extends App
         return $namespace.($endingSlash ? '\\' : '');
     }
 
+    public function map(array $methods, string $route, $handler, ...$handlers): void
+    {
+        if(is_array($handler) && !is_callable($handler)) {
+            if(gettype($handler[0]) === 'string' && class_exists($handler[0])) {
+                $obj = new $handler[0];
+                $newHandler = [$obj, $handler[1]];
+                if(is_callable($newHandler)) {
+                    $handler = $newHandler;
+                }
+            }
+        }
+
+        parent::map($methods, $route, $handler, $handlers);
+    }
+
+
     /**
      * Get the application instance.
      *
