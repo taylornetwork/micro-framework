@@ -207,21 +207,19 @@ class Application extends App
     /**
      * Discover service providers.
      *
-     * @param string $globPath
+     * @param string $path
      * @return void
      */
-    private function discoverProviders(string $globPath): void
+    private function discoverProviders(string $path): void
     {
         $scanner = new Scanner();
-        $scanner->scanDirectory($globPath);
-        dump($scanner->getClasses(TypeDefinition::TYPE_CLASS));
+        $scanner->scanDirectory($this->normalizePath($path));
 
-//        foreach(glob($this->normalizePath($globPath.'/*')) as $provider) {
-//            $class = $this->resolveClassFromPath($provider);
-//            if(!in_array($class, $this->providerList)) {
-//                $this->providerList[] = $class;
-//            }
-//        }
+        foreach($scanner->getClasses(TypeDefinition::TYPE_CLASS) as $provider) {
+            if(!in_array($provider, $this->providerList)) {
+                $this->providerList[] = $provider;
+            }
+        }
     }
 
     protected function discoverFrameworkProviders(): void
