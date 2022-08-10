@@ -339,47 +339,6 @@ class Application extends App
     }
 
     /**
-     * Resolve a PSR-4 class from a path.
-     *
-     * @param string $classPath
-     * @return string
-     */
-    public function resolveClassFromPath(string $classPath): string
-    {
-        $className = str_replace('.php', '', class_basename($classPath));
-
-        // Remove the class name and final separator from the path
-        $classPath = str_replace(DIRECTORY_SEPARATOR.$className.'.php', '', $this->normalizePath($classPath));
-
-        // Get the relative path to the application
-        $relativePath = str_replace($this->appPath.DIRECTORY_SEPARATOR, '', $classPath);
-
-        // Get the path segments to be added to the namespace
-        $pathSegments = explode(DIRECTORY_SEPARATOR, $relativePath);
-
-        return $this->buildNamespaceFromArray($pathSegments).$className;
-    }
-
-    /**
-     * Build a namespace given path segments.
-     *
-     * @param array<string> $segments
-     * @param ?string $baseNamespace
-     * @param bool $endingSlash
-     * @param bool $startingSlash
-     * @return string
-     */
-    public function buildNamespaceFromArray(array $segments, string $baseNamespace = null, bool $endingSlash = true, bool $startingSlash = false): string
-    {
-        $baseNamespace ??= static::$frameworkNamespace;
-        $namespace = ($startingSlash ? '\\' : '').$baseNamespace;
-        foreach($segments as $segment) {
-            $namespace .= (str_ends_with($namespace, '\\') ? '' : '\\').$segment;
-        }
-        return $namespace.($endingSlash ? '\\' : '');
-    }
-
-    /**
      * @throws ApplicationException
      */
     public function map(array $methods, string $route, $handler, ...$handlers): void
