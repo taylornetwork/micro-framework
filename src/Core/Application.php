@@ -223,17 +223,17 @@ class Application extends App
 
     public function map(array $methods, string $route, $handler, ...$handlers): void
     {
+        // Convert a [class-string, method] array to a callable for FrameworkX
         if(is_array($handler) && !is_callable($handler)) {
             if(gettype($handler[0]) === 'string' && class_exists($handler[0])) {
-                $obj = new $handler[0];
-                $newHandler = [$obj, $handler[1]];
-                if(is_callable($newHandler)) {
-                    $handler = $newHandler;
+                $callable = [new $handler[0], $handler[1]];
+                if(is_callable($callable)) {
+                    $handler = $callable;
                 }
             }
         }
 
-        parent::map($methods, $route, $handler, $handlers);
+        parent::map($methods, $route, $handler, ...$handlers);
     }
 
 
