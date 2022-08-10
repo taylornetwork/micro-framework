@@ -2,8 +2,6 @@
 
 namespace TaylorNetwork\MicroFramework\Providers;
 
-use TaylorNetwork\MicroFramework\Contracts\Abstract\ServiceProvider;
-
 class HelperServiceProvider extends ServiceProvider
 {
     public function register(): void

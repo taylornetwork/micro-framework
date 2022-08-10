@@ -6,6 +6,8 @@ use FrameworkX\App;
 use FrameworkX\Container;
 use Illuminate\Support\Str;
 use Psr\Container\ContainerInterface;
+use ReflectionClass;
+use ReflectionException;
 use TaylorNetwork\MicroFramework\Contracts\ServiceProvider;
 
 class Application extends App
@@ -104,13 +106,18 @@ class Application extends App
      * Instantiate and boot providers.
      *
      * @return void
+     * @throws ReflectionException
      */
     protected function bootProviders(): void
     {
         foreach($this->providerList as $provider) {
-            $instance = new $provider($this);
-            $instance->boot();
-            $this->providers[] = $instance;
+            $reflection = new ReflectionClass($provider);
+
+            if($reflection->isInstantiable()) {
+                $instance = new $provider($this);
+                $instance->boot();
+                $this->providers[] = $instance;
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace TaylorNetwork\MicroFramework\Contracts\Abstract;
+namespace TaylorNetwork\MicroFramework\Models;
 
 use TaylorNetwork\MicroFramework\Contracts\Model as ModelContract;
 

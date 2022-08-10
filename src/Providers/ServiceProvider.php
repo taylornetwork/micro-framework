@@ -1,6 +1,6 @@
 <?php
 
-namespace TaylorNetwork\MicroFramework\Contracts\Abstract;
+namespace TaylorNetwork\MicroFramework\Providers;
 
 use TaylorNetwork\MicroFramework\Contracts\ServiceProvider as ServiceProviderContract;
 use TaylorNetwork\MicroFramework\Core\Application;
