@@ -59,7 +59,7 @@ class Application extends App
 
         parent::__construct($this->appContainer, ...$arguments);
 
-        $this->basePath = realpath('.');
+        $this->basePath = realpath('./..');
         $this->appPath = $this->appPath();
 
         $this->discoverProviders();
