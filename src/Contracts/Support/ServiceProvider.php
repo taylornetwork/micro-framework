@@ -1,6 +1,6 @@
 <?php
 
-namespace TaylorNetwork\MicroFramework\Contracts;
+namespace TaylorNetwork\MicroFramework\Contracts\Support;
 
 use TaylorNetwork\MicroFramework\Core\Application;
 

@@ -2,13 +2,14 @@
 
 namespace TaylorNetwork\MicroFramework\Core;
 
-use TaylorNetwork\MicroFramework\Core\Exceptions\ApplicationException;
 use FrameworkX\App;
 use FrameworkX\Container;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
-use TaylorNetwork\MicroFramework\Contracts\ServiceProvider;
+use TaylorNetwork\MicroFramework\Builders\PageBuilder;
+use TaylorNetwork\MicroFramework\Contracts\Support\ServiceProvider;
+use TaylorNetwork\MicroFramework\Core\Exceptions\ApplicationException;
 use Violet\ClassScanner\Scanner;
 use Violet\ClassScanner\TypeDefinition;
 
@@ -31,30 +32,30 @@ class Application extends App
     /**
      * Base path of the framework.
      *
-     * @var string
+     * @var ?string
      */
-    protected string $frameworkPath;
+    protected ?string $frameworkPath = null;
 
     /**
      * The base project path.
      *
-     * @var string
+     * @var ?string
      */
-    protected string $basePath;
+    protected ?string $basePath = null;
 
     /**
      * The application base path.
      *
-     * @var string
+     * @var ?string
      */
-    protected string $appPath;
+    protected ?string $appPath = null;
 
     /**
      * Relative path from basePath to appPath.
      *
-     * @var string
+     * @var ?string
      */
-    protected string $appSegment;
+    protected ?string $appSegment = null;
 
     /**
      * The loaded service providers.
@@ -83,24 +84,41 @@ class Application extends App
         array $arguments = [],
     ) {
         $this->frameworkPath = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..']));
-
-        if($overrideCallback) {
-            $overrideCallback($this);
-        }
-
+        $this->basePath ??= realpath('./..');
+        $this->appPath ??= $this->appPath();
         $this->appContainer ??= new Container($this->container ?? []);
 
         parent::__construct($this->appContainer, ...$arguments);
 
-        $this->basePath ??= realpath('./..');
-        $this->appPath ??= $this->appPath();
-
         $this->discoverFrameworkProviders();
-        $this->discoverApplicationProviders();
+
+        if($this->isRunningAsPackage()) {
+            $this->discoverApplicationProviders();
+        }
+
         $this->bootProviders();
         $this->registerProviders();
 
         $this->setInstance();
+        $this->initialized = true;
+
+        if($overrideCallback) {
+            $this->handleOverrideCallback($overrideCallback);
+        }
+    }
+
+    private function setPaths(): void
+    {
+
+    }
+
+
+
+    private function handleOverrideCallback(callable $callback): void
+    {
+        $this->initialized = false;
+        $callback($this);
+        dump($this);
         $this->initialized = true;
     }
 
@@ -227,9 +245,6 @@ class Application extends App
         $this->discoverProviders($this->frameworkPath('Providers'));
     }
 
-    /**
-     * @throws ApplicationException
-     */
     protected function discoverApplicationProviders(): void
     {
         $this->discoverProviders($this->appPath('Providers'));
@@ -293,25 +308,37 @@ class Application extends App
      * Build a path by prefixing the appPath.
      *
      * @param ?string $path
-     * @return string
+     * @return ?string
      * @throws ApplicationException
      */
-    public function appPath(?string $path = null): string
+    public function appPath(?string $path = null): ?string
     {
-        if(isset($this->appPath)) {
+        if($this->appPath) {
             return $this->path('app', $path);
         }
 
-        if(isset($this->appSegment)) {
+        if(!$this->isRunningAsPackage()) {
+            $this->appSegment = 'src';
+        }
+
+        if($this->appSegment) {
             return $this->basePath($this->appSegment.($path === null ? null : DIRECTORY_SEPARATOR.$path));
         }
 
-        $composer = json_decode(file_get_contents($this->basePath.DIRECTORY_SEPARATOR.'composer.json'), true);
-        $psr4 = $composer['autoload']['psr-4'] ?? [];
+        $composerJson = $this->basePath.DIRECTORY_SEPARATOR.'composer.json';
 
-        if($psr4 !== []) {
-            $this->appSegment = array_values($psr4)[0];
-            return $this->appPath($path);
+        if(file_exists($composerJson)) {
+            $composer = json_decode(file_get_contents($composerJson), true);
+            $psr4 = $composer['autoload']['psr-4'] ?? [];
+
+            if($psr4 !== []) {
+                $this->appSegment = array_values($psr4)[0];
+                return $this->appPath($path);
+            }
+        }
+
+        if(!$this->initialized) {
+            return null;
         }
 
         throw new ApplicationException('appPath could not be found automatically.');

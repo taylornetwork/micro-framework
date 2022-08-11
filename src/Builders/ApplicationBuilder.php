@@ -6,10 +6,11 @@ use Closure;
 use DI\Container;
 use Psr\Container\ContainerInterface;
 use ReflectionException;
+use TaylorNetwork\MicroFramework\Contracts\Support\Builder;
 use TaylorNetwork\MicroFramework\Core\Application;
 use TaylorNetwork\MicroFramework\Core\Exceptions\ApplicationException;
 
-class ApplicationBuilder
+class ApplicationBuilder implements Builder
 {
     protected ContainerInterface $container;
 

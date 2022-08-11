@@ -2,7 +2,7 @@
 
 namespace TaylorNetwork\MicroFramework\Providers;
 
-use TaylorNetwork\MicroFramework\Contracts\ServiceProvider as ServiceProviderContract;
+use TaylorNetwork\MicroFramework\Contracts\Support\ServiceProvider as ServiceProviderContract;
 use TaylorNetwork\MicroFramework\Core\Application;
 
 abstract class ServiceProvider implements ServiceProviderContract

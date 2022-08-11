@@ -2,7 +2,7 @@
 
 namespace TaylorNetwork\MicroFramework\Models;
 
-use TaylorNetwork\MicroFramework\Contracts\Model as ModelContract;
+use TaylorNetwork\MicroFramework\Contracts\Data\Model as ModelContract;
 
 abstract class Model implements ModelContract
 {

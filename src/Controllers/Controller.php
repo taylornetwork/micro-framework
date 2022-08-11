@@ -2,61 +2,55 @@
 
 namespace TaylorNetwork\MicroFramework\Controllers;
 
-use Psr\Http\Message\ResponseInterface;
-use React\Http\Message\Response;
-use TaylorNetwork\MicroFramework\Builders\PageBuilder;
-use TaylorNetwork\MicroFramework\Contracts\Controller as ControllerContract;
+use Fig\Http\Message\StatusCodeInterface;
+use TaylorNetwork\MicroFramework\Contracts\Http\Controller as ControllerContract;
+use TaylorNetwork\MicroFramework\Contracts\Http\HttpResponse;
+use TaylorNetwork\MicroFramework\Contracts\Http\Status;
+use TaylorNetwork\MicroFramework\Contracts\Views\Page;
+use TaylorNetwork\MicroFramework\Http\Responses\Response;
 
 abstract class Controller implements ControllerContract
 {
-    public function response(string $type, string $body): ResponseInterface
+    public function response(string $type, string $body): HttpResponse
     {
         $type = strtolower($type);
         return Response::$type($body);
     }
 
-    public function html(string $html): ResponseInterface
+    public function html(string $html): HttpResponse
     {
         return $this->response('html', $html);
     }
 
-    public function xml(string $xml): ResponseInterface
+    public function xml(string $xml): HttpResponse
     {
         return $this->response('xml', $xml);
     }
 
 
-    public function text(string $text): ResponseInterface
+    public function text(string $text): HttpResponse
     {
         return $this->response('plaintext', $text);
     }
 
-    public function json(mixed $jsonable): ResponseInterface
+    public function json(mixed $jsonable): HttpResponse
     {
         return $this->response('json', json_encode($jsonable));
     }
 
 
-    public function redirect(string $location): ResponseInterface
+    public function redirect(string $location): HttpResponse
     {
-        return new Response(status: 302, headers: [
-            'Location' => $location
-        ]);
+        return new Response(
+            status: StatusCodeInterface::STATUS_FOUND,
+            headers: [
+                'Location' => $location
+            ]
+        );
     }
 
-    public function page(string $pageName, array $replacements = []): ResponseInterface
+    public function page(string $name, array $data = []): Page
     {
-        return $this->html($this->pageHtml($pageName, $replacements));
+        // TODO: Implement page() method.
     }
-
-    public function pageHtml(string $pageName, array $replacements = []): string
-    {
-        return $this->pageBuilder()->usePage($pageName)->setReplacements($replacements)->getRenderedHtml();
-    }
-
-    public function pageBuilder(): PageBuilder
-    {
-        return new PageBuilder();
-    }
-
 }

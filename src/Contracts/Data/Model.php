@@ -1,6 +1,6 @@
 <?php
 
-namespace TaylorNetwork\MicroFramework\Contracts;
+namespace TaylorNetwork\MicroFramework\Contracts\Data;
 
 interface Model
 {
