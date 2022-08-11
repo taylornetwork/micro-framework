@@ -1,11 +1,10 @@
 <?php
 
-namespace TaylorNetwork\MicroFramework\Controllers;
+namespace TaylorNetwork\MicroFramework\Http\Controllers;
 
 use Fig\Http\Message\StatusCodeInterface;
 use TaylorNetwork\MicroFramework\Contracts\Http\Controller as ControllerContract;
 use TaylorNetwork\MicroFramework\Contracts\Http\HttpResponse;
-use TaylorNetwork\MicroFramework\Contracts\Http\Status;
 use TaylorNetwork\MicroFramework\Contracts\Views\Page;
 use TaylorNetwork\MicroFramework\Http\Responses\Response;
 
